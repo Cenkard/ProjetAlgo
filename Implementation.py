@@ -20,8 +20,8 @@ def AlgoRec(S,V):
 	else:
 		return min(AlgoRec(S, V[0:k-1]), AlgoRec(S-V[k-1],V)+1)
 
-#Algo 2
-def AlgoOptimise(S, V): #normal sans construction de A
+#Algo 2, dans les algo ou on calcule le tableau a chaque case, je calcule (A, n) ou A est le tableau A et n est le nommbre de bocause dans A. Ca permet aussi de ne pas compter a chaque fois le nombre de bocaux de A pour le min.
+def AlgoOptimise(S, V):
 	k = len(V)
 	M = [[0 for x in range(k+1)] for y in range(S+1)]
 
@@ -34,34 +34,10 @@ def AlgoOptimise(S, V): #normal sans construction de A
 			if (s-V[i-1]>=0):
 				terme2 = M[s-V[i-1]][i]+1
 			M[s][i] = min(M[s][i-1], terme2)
-	return M[S][k]
-
-def AlgoOptimiseBack(S,V): #Backword sans construction de A
-	k=len(V)
-	M = [[0 for x in range(k+1)] for y in range(S+1)]
-	for s in range(1, S+1):
-			M[s][0] = inf
-	return AlgoOptimiseBackInter(S, V, M)
-
-def AlgoOptimiseBackInter(S, V, M): #algo necessaire pour Backword sans construction de A
-	k=len(V)
-	if (S==0):
-		return 0
-	elif (k==0 or S<0):
-		return inf
-	terme2= inf
-	if (S-V[k-1]>=0):
-		terme2 = M[S-V[k-1]][k]
-		if (terme2==0):
-			terme2 = AlgoOptimiseBackInter(S-V[k-1],V, M)
-		terme2 = terme2+1
-	terme1=  M[S][k-1]
-	if (terme1==0):
-		terme1 = AlgoOptimiseBackInter(S,V[0:k-1], M)
-	return min(terme1,terme2)
+	return M
 
 
-def AlgoOptimiseTab(S,V):#normal sans construction de A
+def AlgoOptimiseTab(S,V):
 	k = len(V)
 	M = [[([0 for l in range(x)],0)for x in range(k+1)] for y in range(S+1)] 
 
@@ -86,34 +62,43 @@ def AlgoOptimiseTab(S,V):#normal sans construction de A
 			#print(M[s][i])
 	return M[S][k]
 
-def AlgoOptimiseTabBack(S,V): #Backword avec construction de A
-	k=len(V)
-	M = [[([0 for l in range(x)],0)for x in range(k+1)] for y in range(S+1)] 
-	for s in range(1, S+1):
-			M[s][0] = [],inf
-	return AlgoOptimiseTabBackInter(S, V, M)
 
-def AlgoOptimiseTabBackInter(S, V, M):# algo necessaire pour Backwords avec construction de A
-	k=len(V)
-	if (S==0):
-		return M[0][k]
-	elif (k==0 or S<0):
+def AlgoOptimiseTabBack(S, V):
+	if (V==[]):
 		return [], inf
-	terme1, n1 = M[S][k-1]
-	if (n1==0):
-		terme1, n1= AlgoOptimiseTabBackInter(S, V[0:k-1], M)
-	terme2,n2 = [],inf
-	if (S-V[k-1]>=0):
-		terme, n = M[S-V[k-1]][k]
-		if (n==0):
-			terme, n = AlgoOptimiseTabBackInter(S-V[k-1],V, M)
-		terme2, n2 = [el for el in terme], n
-		terme2[k-1], n2 = terme2[k-1]+1, n2+1
 
-	M[S][k] = terme2, n2
-	if (n1<n2):
-		M[S][k]= terme1+[0],n1
-	return M[S][k]
+	k = len(V)
+	M = [[0 for x in range(k+1)] for y in range(S+1)]
+
+	for s in range(1, S+1):
+		M[s][0] = inf
+
+	for i in range(1, k+1):
+		for s in range(1, S+1):
+			terme2 = inf
+			if (s-V[i-1]>=0):
+				terme2 = M[s-V[i-1]][i]+1
+			M[s][i] = min(M[s][i-1], terme2)
+
+
+
+	A= [0 for i in range(k)]
+	s = S
+	i = k
+	n = 0
+	while (s!=0): #car toujours existe solution
+		terme1 = M[s][i-1]
+		terme2 = M[s-V[i-1]][i]
+		val = min(M[s][i-1], M[s-V[i-1]][i])
+		if (val == terme1):
+			i = i-1
+		else:
+			s= s-V[i-1]
+			A[i-1] = A[i-1]+1
+			n=n+1
+	return A,n
+
+
 
 
 #Algo3
@@ -149,11 +134,11 @@ def AlgoGloutonTab(S, V):
 
 
 
-#Exemples
 def Test(S,V):
 	print("S={} et V={}".format(S,V))
 	print("Rec: {}".format(AlgoRec(S,V)))
-	print("Optimise: {}".format(AlgoOptimiseBack(S,V)))
+	print("Optimise: {}".format(AlgoOptimiseTab(S,V)))
+	print("Optimise: {}".format(AlgoOptimiseTabBack(S,V)))
 	print("Glouton: {}".format(AlgoGlouton(S, V))+"\n")
 
 Test(0, [1,3,6,9])
@@ -163,8 +148,9 @@ Test(11, [1,3,6,8,9])
 Test(16, [1,3,6,8,9])
 Test(24, [1,3,6,8,9])
 
-print(timeit(lambda: AlgoOptimise(742, [1,4,5,89,100,124]), number=1))
-print(timeit(lambda: AlgoOptimiseBack(742, [1,4,5,89,100,124]), number=1))
+#Teste d'optimisation AlgoOptimiseTab et AlgoOptimiseTabBack
+print(timeit(lambda: AlgoOptimiseTab(742, [1,4,5,89,100,124]), number=100))
+print(timeit(lambda: AlgoOptimiseTabBack(742, [1,4,5,89,100,124]), number=100))
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #Q3.2
@@ -194,7 +180,7 @@ def TestTemps(d):
 				with open("d{}Rec.txt".format(d),'a') as f:
 					f.write(str(s)+" "+str(i)+" "+str(tr)+"\n")
 			#Optimise
-			to= timeit(lambda: AlgoOptimise(s,V),number=1)
+			to= timeit(lambda: AlgoOptimiseTabBack(s,V),number=1)
 			with open("d{}Optimise.txt".format(d),'a') as f:
 					f.write(str(s)+" "+str(i)+" "+str(to)+"\n")
 			#Glouton
@@ -203,11 +189,10 @@ def TestTemps(d):
 					f.write(str(s)+" "+str(i)+" "+str(tg)+"\n")
 			print(s,i)
 
-
+"""
 ClearFichiers()#permet de vider les fichiers servants a tracer les graphes a chaque execution
 #d=2
 TestTemps(2)
-"""
 #d=3
 TestTemps(3)
 #d=4
@@ -303,7 +288,6 @@ def BocMin(S, T): #pour etre le plus proche possible des resultats les plus prec
 	print("Pourcentage de glouton compatible= "+str((float(len(T)-CptNonComp)/float(len(T)))*100))
 
 #BocMin(S, T)
-
 """
 PireEcart= 1
 EcartMoyen= 0.111049416991
