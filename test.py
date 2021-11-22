@@ -1,4 +1,5 @@
 import sys
+from random import *
 inf= sys.maxint
 S = 7
 V = [1,2,4,9]
@@ -43,9 +44,6 @@ def AlgoOptimise(S, V):
 			M[s][i] = min(M[s][i-1], terme2)
 	return M
 
-M = AlgoOptimiseTab(S,V)
-
-for el in M:
-	print el
 
 
+print(random())
