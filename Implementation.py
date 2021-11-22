@@ -203,10 +203,11 @@ def TestTemps(d):
 					f.write(str(s)+" "+str(i)+" "+str(tg)+"\n")
 			print(s,i)
 
-"""
+
 ClearFichiers()#permet de vider les fichiers servants a tracer les graphes a chaque execution
 #d=2
 TestTemps(2)
+"""
 #d=3
 TestTemps(3)
 #d=4
