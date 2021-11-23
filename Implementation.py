@@ -34,7 +34,7 @@ def AlgoOptimise(S, V):
 			if (s-V[i-1]>=0):
 				terme2 = M[s-V[i-1]][i]+1
 			M[s][i] = min(M[s][i-1], terme2)
-	return M
+	return M[S][k]
 
 
 def AlgoOptimiseTab(S,V):
@@ -88,8 +88,10 @@ def AlgoOptimiseTabBack(S, V):
 	n = 0
 	while (s!=0): #car toujours existe solution
 		terme1 = M[s][i-1]
-		terme2 = M[s-V[i-1]][i]
-		val = min(M[s][i-1], M[s-V[i-1]][i])
+		terme2 = inf
+		if (s-V[i-1]>=0):
+			terme2 = M[s-V[i-1]][i]
+		val = min(terme1, terme2)
 		if (val == terme1):
 			i = i-1
 		else:
@@ -111,6 +113,7 @@ def AlgoGlouton(S, V):
 	elif (S<0 or L==0):
 		return inf
 	for i in range(L-1,-1, -1):
+		#print("Glouton: "+str(i))
 		ResDiv = St/V[i]
 		if (ResDiv>=1):
 			St = St-ResDiv*V[i]
@@ -156,7 +159,7 @@ print(timeit(lambda: AlgoOptimiseTabBack(742, [1,4,5,89,100,124]), number=100))
 #Q3.2
 
 #Question 12
-S=30000 #S va varier de 0 a 10^6 en pas de 100
+S=30000 #S va varier de 0 a 30000 en pas de 100
 k=12  #|V| va varier de 0 a 12
 
 def SystemeExpo(d, k):
@@ -173,31 +176,34 @@ def TestTemps(d):
 	tg=0 #temps algo glouton
 	for s in range(0,S+1, 100):
 		for i in range(0,k+1):
+			print(s,i)
+
 			V = SystemeExpo(d, i)
 			#Rec
-			if (tr<=60):
+			if (tr<=50):
 				tr= timeit(lambda: AlgoRec(s,V),number=1)
 				with open("d{}Rec.txt".format(d),'a') as f:
 					f.write(str(s)+" "+str(i)+" "+str(tr)+"\n")
 			#Optimise
 			to= timeit(lambda: AlgoOptimiseTabBack(s,V),number=1)
+
 			with open("d{}Optimise.txt".format(d),'a') as f:
 					f.write(str(s)+" "+str(i)+" "+str(to)+"\n")
 			#Glouton
 			tg= timeit(lambda: AlgoGlouton(s,V),number=1)
 			with open("d{}Glouton.txt".format(d),'a') as f:
 					f.write(str(s)+" "+str(i)+" "+str(tg)+"\n")
-			print(s,i)
 
-"""
+
 ClearFichiers()#permet de vider les fichiers servants a tracer les graphes a chaque execution
+"""
 #d=2
 TestTemps(2)
 #d=3
 TestTemps(3)
+"""
 #d=4
 TestTemps(4)
-"""
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #Q3.3
@@ -288,6 +294,7 @@ def BocMin(S, T): #pour etre le plus proche possible des resultats les plus prec
 	print("Pourcentage de glouton compatible= "+str((float(len(T)-CptNonComp)/float(len(T)))*100))
 
 #BocMin(S, T)
+
 """
 PireEcart= 1
 EcartMoyen= 0.111049416991

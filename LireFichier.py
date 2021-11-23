@@ -7,7 +7,7 @@ def LireParam(NomFichier):
 	        L.append(val)
 	return L
 
-res = LireParam("donnees")
+res = LireParam("donnees.txt")
 S = res[0]
 V = res[2:]
 print(S,V)
