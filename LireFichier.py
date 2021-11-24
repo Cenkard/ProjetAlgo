@@ -1,7 +1,7 @@
 def LireParam(NomFichier):
 	cpt=0
 	L=[]
-	with open(NomFichier) as f:
+	with open(NomFichier, "r") as f:
 	    for line in f:
 	    	val = int(line)
 	        L.append(val)

@@ -159,9 +159,6 @@ print(timeit(lambda: AlgoOptimiseTabBack(742, [1,4,5,89,100,124]), number=100))
 #Q3.2
 
 #Question 12
-S=30000 #S va varier de 0 a 30000 en pas de 100
-k=12  #|V| va varier de 0 a 12
-
 def SystemeExpo(d, k):
 	if (d<2):
 		return "erreur d<2"
@@ -170,6 +167,7 @@ def SystemeExpo(d, k):
 		L.append(d**(i))
 	return L
 
+"""
 def TestTemps(d):
 	tr=0 #temps algo rec
 	to=0 #temps algo optimise
@@ -186,24 +184,75 @@ def TestTemps(d):
 					f.write(str(s)+" "+str(i)+" "+str(tr)+"\n")
 			#Optimise
 			to= timeit(lambda: AlgoOptimiseTabBack(s,V),number=1)
-
 			with open("d{}Optimise.txt".format(d),'a') as f:
 					f.write(str(s)+" "+str(i)+" "+str(to)+"\n")
 			#Glouton
 			tg= timeit(lambda: AlgoGlouton(s,V),number=1)
 			with open("d{}Glouton.txt".format(d),'a') as f:
 					f.write(str(s)+" "+str(i)+" "+str(tg)+"\n")
-
-
-ClearFichiers()#permet de vider les fichiers servants a tracer les graphes a chaque execution
 """
+
+def TestTempsGlouton(d):
+	tg=0 #temps algo glouton
+	S=1000000 #
+	k=40  #
+	for s in range(0,S+1, 100):
+		for i in range(0,k+1):
+			print(s,i)
+			V = SystemeExpo(d, i)
+			tg= timeit(lambda: AlgoGlouton(s,V),number=1)
+			with open("d{}Glouton.txt".format(d),'a') as f:
+					f.write(str(s)+" "+str(i)+" "+str(tg)+"\n")
+
+def TestTempsOptimise(d):
+	to=0 #temps algo optimise
+	S=100000 #S va varier de 0 a 30000 en pas de 100
+	k=12  #|V| va varier de 0 a 12
+	for s in range(0,S+1, 100):
+		for i in range(0,k+1):
+			print(s,i)
+			V = SystemeExpo(d, i)
+			to= timeit(lambda: AlgoOptimiseTabBack(s,V),number=1)
+			with open("d{}Optimise.txt".format(d),'a') as f:
+					f.write(str(s)+" "+str(i)+" "+str(to)+"\n")
+def TestTempsRec(d):
+	tr=0 #temps algo glouton
+	S=30000 #S va varier de 0 a 30000 en pas de 100
+	k=10  #|V| va varier de 0 a 12
+	for s in range(0,S+1, 100):
+		for i in range(0,k+1):
+			print(s,i)
+			V = SystemeExpo(d, i)
+			if (tr<=50):
+				tr= timeit(lambda: AlgoRec(s,V),number=1)
+				with open("d{}Rec.txt".format(d),'a') as f:
+					f.write(str(s)+" "+str(i)+" "+str(tr)+"\n")
+"""
+ClearFichiers()#permet de vider les fichiers servants a tracer les graphes a chaque execution
+#Test Optimise
 #d=2
-TestTemps(2)
+TestTempsGlouton(2)
 #d=3
-TestTemps(3)
+TestTempsGlouton(3)
+#d=4
+TestTempsGlouton(4)
+
+#Test Glouton
+#d=2
+TestTempsOptimise(2)
+#d=3
+TestTempsOptimise(3)
+#d=4
+TestTempsOptimise(4)
+
+#Test Rec
+#d=2
+TestTempsRec(2)
+#d=3
+TestTempsRec(3)
 """
 #d=4
-TestTemps(4)
+TestTempsRec(4)
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #Q3.3
