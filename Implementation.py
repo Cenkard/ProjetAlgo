@@ -7,9 +7,58 @@ from Outils import *
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #Q3.1
-inf= sys.maxint
-S=7
-V=[1,2,4,6,9]
+
+#Lecture de fichiers
+def Fusionner(tab1, tab2):
+	res =[]
+	k = 0 #indice de construction du tableau res 
+	i = 0 #indice de parcours de tab1
+	j = 0 #indice de parours de tab2
+	tailleTab1 = len(tab1)
+	tailleTab2 = len(tab2)
+	tailleRes = tailleTab1 + tailleTab2
+	while (k != tailleRes):
+		if (i == tailleTab1):
+			res.append(tab2[j])
+			j=j+1
+		elif (j== tailleTab2):
+			res.append(tab1[i])
+			i=i+1
+		elif (tab1[i]<=tab2[j]):
+			res.append(tab1[i])
+			i=i+1
+		else:
+			res.append(tab2[j])
+			j=j+1
+		k=k+1
+	return res
+
+def TriFusion(tab):
+	if (len(tab)==1):
+		return tab
+	else:
+		m = len(tab)/2
+		tab1 = TriFusion(tab[:m])
+		tab2 = TriFusion(tab[m:])
+		return Fusionner(tab1,tab2)
+
+def LireParam(NomFichier):
+	cpt=0
+	L=[]
+	with open(NomFichier, "r") as f:
+	    for line in f:
+	    	if (line[-1]=="\n"):
+	    		L.append(line[:-1])
+	    	else:
+	    		L.append(line)
+
+	S = L[0]
+	k = L[1]
+	V = L[2:]
+	V = TriFusion(V)
+	return S,k,V
+
+
 #Algo 1
 def AlgoRec(S,V):
 	k = len(V)
@@ -19,6 +68,7 @@ def AlgoRec(S,V):
 		return inf
 	else:
 		return min(AlgoRec(S, V[0:k-1]), AlgoRec(S-V[k-1],V)+1)
+
 
 #Algo 2, dans les algo ou on calcule le tableau a chaque case, je calcule (A, n) ou A est le tableau A et n est le nommbre de bocause dans A. Ca permet aussi de ne pas compter a chaque fois le nombre de bocaux de A pour le min.
 def AlgoOptimise(S, V):
@@ -36,6 +86,7 @@ def AlgoOptimise(S, V):
 			M[s][i] = min(M[s][i-1], terme2)
 	return M[S][k]
 
+print(AlgoOptimise(748, [1,2,5,10]))
 
 def AlgoOptimiseTab(S,V):
 	k = len(V)
@@ -156,8 +207,8 @@ print(timeit(lambda: AlgoOptimiseTab(742, [1,4,5,89,100,124]), number=100))
 print(timeit(lambda: AlgoOptimiseTabBack(742, [1,4,5,89,100,124]), number=100))
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#Q3.2
 
+#Q3.2
 #Question 12
 def SystemeExpo(d, k):
 	if (d<2):
@@ -349,6 +400,7 @@ PireEcart= 1
 EcartMoyen= 0.111049416991
 Pourcentage de glouton compatible= 11.6071428571
 """
+
 
 
 
