@@ -220,11 +220,9 @@ def SystemeExpo(d, k):
 		L.append(d**(i))
 	return L
 
-def TestTempsGlouton(d, S, k):
+def TestTempsGlouton(d, S, k, Spas):
 	tg=0 #temps algo glouton
-	S=1000000 #
-	k=40  #
-	for s in range(0,S+1, 100):
+	for s in range(0,S+1, Spas):
 		for i in range(0,k+1):
 			print(s,i)
 			V = SystemeExpo(d, i)
@@ -232,22 +230,18 @@ def TestTempsGlouton(d, S, k):
 			with open("d{}Glouton.txt".format(d),'a') as f:
 					f.write(str(s)+" "+str(i)+" "+str(tg)+"\n")
 
-def TestTempsOptimise(d, S, k):
+def TestTempsOptimise(d, S, k, Spas):
 	to=0 #temps algo optimise
-	S=100000 #S va varier de 0 a 30000 en pas de 100
-	k=12  #|V| va varier de 0 a 12
-	for s in range(0,S+1, 100):
+	for s in range(0,S+1, Spas):
 		for i in range(0,k+1):
 			print(s,i)
 			V = SystemeExpo(d, i)
 			to= timeit(lambda: AlgoOptimiseTabBack(s,V),number=1)
 			with open("d{}Optimise.txt".format(d),'a') as f:
 					f.write(str(s)+" "+str(i)+" "+str(to)+"\n")
-def TestTempsRec(d, S, k):
+def TestTempsRec(d, S, k, Spas):
 	tr=0 #temps algo glouton
-	S=30000 #S va varier de 0 a 30000 en pas de 100
-	k=10  #|V| va varier de 0 a 12
-	for s in range(0,S+1, 100):
+	for s in range(0,S+1, Spas):
 		for i in range(0,k+1):
 			print(s,i)
 			V = SystemeExpo(d, i)
@@ -260,41 +254,41 @@ ClearFichiers()#permet de vider les fichiers servants a tracer les graphes a cha
 """
 #Test Glouton
 #d=2
-TestTempsGlouton(2, 1000000, 40)
-TestTempsGlouton(2, 1000000, 1000)
+TestTempsGlouton(2, 1000000, 40,100)
+TestTempsGlouton(2, 1000000, 1000, 100)
 #d=3
-TestTempsGlouton(3,1000000, 40)
+TestTempsGlouton(3,1000000, 40,100)
 #d=4
-TestTempsGlouton(4,1000000,40)
+TestTempsGlouton(4,1000000,40,100)
 
 #Test Optimise
 #d=2
-TestTempsOptimise(2,100000,12)
-TestTempsOptimise(2, 1000, 1000)
+TestTempsOptimise(2,100000,12,10)
+TestTempsOptimise(2, 1000, 1000, 1)
 #d=3
-TestTempsOptimise(3,100000,12)
-TestTempsOptimise(3, 1000, 1000)
+TestTempsOptimise(3,100000,12,10)
+TestTempsOptimise(3, 1000, 1000, 1)
 #d=4
-TestTempsOptimise(4,100000,12)
-TestTempsOptimise(4, 1000, 1000)
+TestTempsOptimise(4,100000,12,10)
+TestTempsOptimise(4, 1000, 1)
 
 #Test Rec
 #d=2
-TestTempsRec(2,30000,10)
+TestTempsRec(2,30000,10, 10)
 #d=3
-TestTempsRec(3,30000,10)
+TestTempsRec(3,30000,10, 10)
 #d=4
-TestTempsRec(4,30000,10)
+TestTempsRec(4,30000,10, 10)
 """
 #pour voir quadratique dans optimise O(k*S)
-TestTempsOptimise(2, 1000, 1000)
-TestTempsOptimise(3, 1000, 1000)
-TestTempsOptimise(4, 1000, 1000)
+TestTempsOptimise(2, 1000, 1000,10)
+TestTempsOptimise(3, 1000, 1000,10)
+TestTempsOptimise(4, 1000, 1000,10)
 
 #pout voir lineaire en glouton O(k)
-TestTempsGlouton(2, 1000000, 1000)
-TestTempsGlouton(3,1000000, 1000)
-TestTempsGlouton(4,1000000, 1000)
+TestTempsGlouton(2, 1000000, 1000,1)
+TestTempsGlouton(3,1000000, 1000,1)
+TestTempsGlouton(4,1000000, 1000,1)
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #Q3.3
@@ -313,7 +307,7 @@ def indice(val, L):
 def GenCapaAlea(k, pmax): #genere liste contenants 250 V differents pour chaque taille k, 3<=k<=12. J'ai essaye avec 10000 V pour chaque taille k pour un resultat plus precis, mais ca prend beaucoup plus du temps et ca donne aussi 10% donc je me contente de 250 V par k
 	L=[]
 	for i in range(3, k+1):
-		for n in range(250): #À changer si prend bcp de tps en 100
+		for n in range(250): #A changer si prend bcp de tps en 100
 			el = [1]
 			if (i==2): #s'il n'y a que deux elements, pas besoin de faire le tri... 
 				el.append(GenVal(pmax))
