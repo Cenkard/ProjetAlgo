@@ -10,3 +10,5 @@ def ClearFichiers():
 				f.write('')
 		with open("d{}Glouton.txt".format(d),'w') as f:
 				f.write('')
+	with open ("BocMin.txt", 'w') as f:
+		f.write('')

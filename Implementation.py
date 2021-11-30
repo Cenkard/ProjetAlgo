@@ -5,6 +5,8 @@ from random import random
 from timeit import timeit
 from Outils import *
 
+inf= float('inf')
+
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #Q3.1
 
@@ -85,8 +87,6 @@ def AlgoOptimise(S, V):
 				terme2 = M[s-V[i-1]][i]+1
 			M[s][i] = min(M[s][i-1], terme2)
 	return M[S][k]
-
-print(AlgoOptimise(748, [1,2,5,10]))
 
 def AlgoOptimiseTab(S,V):
 	k = len(V)
@@ -175,25 +175,27 @@ def AlgoGloutonTab(S, V):
 	L= len(V)
 	A = [0 for i in range(L)]
 	St = S
+	n=0
 	if (S==0):
-		return A
+		return A, n
 	elif (S<0 or L==0):
-		return "Erreur, S<0 ou V=[]"
+		return [], inf
 	for i in range(L-1,-1, -1):
 		ResDiv = St/V[i]
 		if (ResDiv>=1):
 			St = St-ResDiv*V[i]
 			A[i] = ResDiv
-	return A
+			n = n +ResDiv
+	return A, n
 
 
-
+#Exemples pour tester fonctionnements
 def Test(S,V):
 	print("S={} et V={}".format(S,V))
 	print("Rec: {}".format(AlgoRec(S,V)))
-	print("Optimise: {}".format(AlgoOptimiseTab(S,V)))
-	print("Optimise: {}".format(AlgoOptimiseTabBack(S,V)))
-	print("Glouton: {}".format(AlgoGlouton(S, V))+"\n")
+	print("OptimiseTab: {}".format(AlgoOptimiseTab(S,V)))
+	print("OptimiseTabBack: {}".format(AlgoOptimiseTabBack(S,V)))
+	print("Glouton: {}".format(AlgoGloutonTab(S, V))+"\n")
 
 Test(0, [1,3,6,9])
 Test(123, [])
@@ -202,9 +204,9 @@ Test(11, [1,3,6,8,9])
 Test(16, [1,3,6,8,9])
 Test(24, [1,3,6,8,9])
 
-#Teste d'optimisation AlgoOptimiseTab et AlgoOptimiseTabBack
-print(timeit(lambda: AlgoOptimiseTab(742, [1,4,5,89,100,124]), number=100))
-print(timeit(lambda: AlgoOptimiseTabBack(742, [1,4,5,89,100,124]), number=100))
+#Teste d'optimisation AlgoOptimiseTab et AlgoOptimiseTabBack (pas demande)
+print("Temps mit par OptimiseTab: "+str(timeit(lambda: AlgoOptimiseTab(742, [1,4,5,89,100,124]), number=100)))
+print("Temps mit par OptimiseTabBack: "+str(timeit(lambda: AlgoOptimiseTabBack(742, [1,4,5,89,100,124]), number=100)))
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -218,32 +220,7 @@ def SystemeExpo(d, k):
 		L.append(d**(i))
 	return L
 
-"""
-def TestTemps(d):
-	tr=0 #temps algo rec
-	to=0 #temps algo optimise
-	tg=0 #temps algo glouton
-	for s in range(0,S+1, 100):
-		for i in range(0,k+1):
-			print(s,i)
-
-			V = SystemeExpo(d, i)
-			#Rec
-			if (tr<=50):
-				tr= timeit(lambda: AlgoRec(s,V),number=1)
-				with open("d{}Rec.txt".format(d),'a') as f:
-					f.write(str(s)+" "+str(i)+" "+str(tr)+"\n")
-			#Optimise
-			to= timeit(lambda: AlgoOptimiseTabBack(s,V),number=1)
-			with open("d{}Optimise.txt".format(d),'a') as f:
-					f.write(str(s)+" "+str(i)+" "+str(to)+"\n")
-			#Glouton
-			tg= timeit(lambda: AlgoGlouton(s,V),number=1)
-			with open("d{}Glouton.txt".format(d),'a') as f:
-					f.write(str(s)+" "+str(i)+" "+str(tg)+"\n")
-"""
-
-def TestTempsGlouton(d):
+def TestTempsGlouton(d, S, k):
 	tg=0 #temps algo glouton
 	S=1000000 #
 	k=40  #
@@ -255,7 +232,7 @@ def TestTempsGlouton(d):
 			with open("d{}Glouton.txt".format(d),'a') as f:
 					f.write(str(s)+" "+str(i)+" "+str(tg)+"\n")
 
-def TestTempsOptimise(d):
+def TestTempsOptimise(d, S, k):
 	to=0 #temps algo optimise
 	S=100000 #S va varier de 0 a 30000 en pas de 100
 	k=12  #|V| va varier de 0 a 12
@@ -266,7 +243,7 @@ def TestTempsOptimise(d):
 			to= timeit(lambda: AlgoOptimiseTabBack(s,V),number=1)
 			with open("d{}Optimise.txt".format(d),'a') as f:
 					f.write(str(s)+" "+str(i)+" "+str(to)+"\n")
-def TestTempsRec(d):
+def TestTempsRec(d, S, k):
 	tr=0 #temps algo glouton
 	S=30000 #S va varier de 0 a 30000 en pas de 100
 	k=10  #|V| va varier de 0 a 12
@@ -278,32 +255,46 @@ def TestTempsRec(d):
 				tr= timeit(lambda: AlgoRec(s,V),number=1)
 				with open("d{}Rec.txt".format(d),'a') as f:
 					f.write(str(s)+" "+str(i)+" "+str(tr)+"\n")
-"""
-ClearFichiers()#permet de vider les fichiers servants a tracer les graphes a chaque execution
-#Test Optimise
-#d=2
-TestTempsGlouton(2)
-#d=3
-TestTempsGlouton(3)
-#d=4
-TestTempsGlouton(4)
 
+ClearFichiers()#permet de vider les fichiers servants a tracer les graphes a chaque execution
+"""
 #Test Glouton
 #d=2
-TestTempsOptimise(2)
+TestTempsGlouton(2, 1000000, 40)
+TestTempsGlouton(2, 1000000, 1000)
 #d=3
-TestTempsOptimise(3)
+TestTempsGlouton(3,1000000, 40)
 #d=4
-TestTempsOptimise(4)
+TestTempsGlouton(4,1000000,40)
+
+#Test Optimise
+#d=2
+TestTempsOptimise(2,100000,12)
+TestTempsOptimise(2, 1000, 1000)
+#d=3
+TestTempsOptimise(3,100000,12)
+TestTempsOptimise(3, 1000, 1000)
+#d=4
+TestTempsOptimise(4,100000,12)
+TestTempsOptimise(4, 1000, 1000)
 
 #Test Rec
 #d=2
-TestTempsRec(2)
+TestTempsRec(2,30000,10)
 #d=3
-TestTempsRec(3)
-"""
+TestTempsRec(3,30000,10)
 #d=4
-TestTempsRec(4)
+TestTempsRec(4,30000,10)
+"""
+#pour voir quadratique dans optimise O(k*S)
+TestTempsOptimise(2, 1000, 1000)
+TestTempsOptimise(3, 1000, 1000)
+TestTempsOptimise(4, 1000, 1000)
+
+#pout voir lineaire en glouton O(k)
+TestTempsGlouton(2, 1000000, 1000)
+TestTempsGlouton(3,1000000, 1000)
+TestTempsGlouton(4,1000000, 1000)
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #Q3.3
@@ -319,16 +310,14 @@ def indice(val, L):
 		return -1
 	return res
 
-def GenCapaAlea(k, pmax): #genere liste contenants [], [1] et 10 V differents pour chaque taille k, 1<k<=12. J'ai essaye avec 100 V pour chaque taille k pour un resultat plus precis, mais ca prend beaucoup plus du temps
+def GenCapaAlea(k, pmax): #genere liste contenants 250 V differents pour chaque taille k, 3<=k<=12. J'ai essaye avec 10000 V pour chaque taille k pour un resultat plus precis, mais ca prend beaucoup plus du temps et ca donne aussi 10% donc je me contente de 250 V par k
 	L=[]
-	L.append([])
-	L.append([1])
-	for i in range(2, k+1):
-		for n in range(10):
+	for i in range(3, k+1):
+		for n in range(250): #À changer si prend bcp de tps en 100
 			el = [1]
-			if (i==2): #s'il n'y a que deux elements, ce n'est pas important c'est toujours compatible... 
-				el.append(2+floor(random()*(pmax-2+1)))
-			else:
+			if (i==2): #s'il n'y a que deux elements, pas besoin de faire le tri... 
+				el.append(GenVal(pmax))
+			else: #sinon il faut inserer les element en ordre croissant et verifier qu'il n'y a pas un meme element deux fois
 				for j in range(1, i):
 					val = 0
 					ind = -1
@@ -341,7 +330,7 @@ def GenCapaAlea(k, pmax): #genere liste contenants [], [1] et 10 V differents po
 
 
 #Question 13
-pmax= 200
+pmax= 500
 T = GenCapaAlea(12, pmax)
 #PrintTabDim2(T)
 
@@ -365,13 +354,14 @@ def ProportionGloutonComp(T):
 		print(i)
 	return float(cpt)/float(l)
 
-#print(ProportionGloutonComp(T)) #~10% sont glouton compatible, approximee a la premiere decimale...
+print("Proportion compatible: "+str(ProportionGloutonComp(T))) #~1% sont glouton compatible, approximee a la premiere decimale...
 
 #Question 14
-pmax= 200
+pmax= 500
 S = 10*pmax
+#T n'a pas change, T=GenCapaAlea(12, pmax) avec k=12 er pmax=200
 
-def BocMin(S, T): #pour etre le plus proche possible des resultats les plus precis sachant que le poucentage de glouton compatible doit etre 10%, j ai redemarre le programme jusqu a avoir ~0.116
+def BocMin(S, T):#T= tableau contenant des V differents #pour etre le plus proche possible des resultats les plus precis sachant que le poucentage de glouton compatible doit etre 1%, j ai redemarre le programme jusqu a avoir ~0.0116
 	l = len(T)
 	PireEcart=0
 	SommeEcart=0
@@ -381,19 +371,21 @@ def BocMin(S, T): #pour etre le plus proche possible des resultats les plus prec
 		if (TestGloutonCompatible(len(T[v]),T[v])==False):
 			CptNonComp=CptNonComp+1
 			for s in range(pmax, S+1):
-				nbminOp = AlgoOptimise(s, V)
-				nbminGl = AlgoGlouton(s,V)
+				nbminOp = AlgoOptimise(s, T[v]) #nombre min de bocaux pour algo optimise
+				nbminGl = AlgoGlouton(s,T[v]) #nombre min de bocaux pour algo glouton
 				ecart= nbminGl-nbminOp
 				if (ecart>PireEcart):
 					PireEcart=ecart
 				SommeEcart = SommeEcart+ecart
 				CptEcart = CptEcart+1
 				print(str(v)+"/"+str(l-1)+" "+str(s)+"/"+str(S))
+				with open ("BocMin.txt", "a") as f:
+					f.write(str(v)+"/"+str(l-1)+" "+str(s)+"/"+str(S))
 	print("PireEcart= "+str(PireEcart))
 	print("EcartMoyen= "+str(float(SommeEcart)/float(CptEcart)))
 	print("Pourcentage de glouton compatible= "+str((float(len(T)-CptNonComp)/float(len(T)))*100))
 
-#BocMin(S, T)
+BocMin(S, T)
 
 """
 PireEcart= 1
