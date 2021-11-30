@@ -322,6 +322,42 @@ def GenCapaAlea(k, pmax): #genere liste contenants 250 V differents pour chaque 
 			L.append(el)
 	return L
 
+def GenCapaAlea(k1,k2,k3, pmax): #retourne 1000 système différents par k
+	L1=[]
+	L2=[]
+	L3=[]
+
+	for n in range(1000):
+		el = [1]
+		for j in range(1,k1):
+			val=0
+			ind = -1 
+			while (ind == -1):
+				val = GenVal(pmax)
+				ind = indice(val, el) #indice renvoit -1 si val invalide, sinon elle renvoit l'indice dans lequel inserer val
+				el.insert(ind, val)
+		L1.append(el)
+
+		el = [1]
+		for j in range(1,k2):
+			val=0
+			ind = -1 
+			while (ind == -1):
+				val = GenVal(pmax)
+				ind = indice(val, el) #indice renvoit -1 si val invalide, sinon elle renvoit l'indice dans lequel inserer val
+				el.insert(ind, val)
+		L2.append(el)
+
+		el = [1]
+		for j in range(1,k3):
+			val=0
+			ind = -1 
+			while (ind == -1):
+				val = GenVal(pmax)
+				ind = indice(val, el) #indice renvoit -1 si val invalide, sinon elle renvoit l'indice dans lequel inserer val
+				el.insert(ind, val)
+		L3.append(el)
+	return L1, L2, L3 
 
 #Question 13
 pmax= 500
