@@ -1,0 +1,9 @@
+PireEcart= 183
+EcartMoyen= 20.697434174
+Pourcentage de glouton compatible=16.4
+PireEcart= 139
+EcartMoyen= 12.7013559134
+Pourcentage de glouton compatible=0.0
+PireEcart= 93
+EcartMoyen= 5.93226374237
+Pourcentage de glouton compatible=0.0

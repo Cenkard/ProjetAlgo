@@ -1,0 +1,3 @@
+PireEcart= 178
+EcartMoyen= 14.0582267842
+Pourcentage de glouton compatible=2.66666666667
